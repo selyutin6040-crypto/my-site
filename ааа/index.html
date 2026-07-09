@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title></title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div class="container" id="appContainer">
+  <!-- ЛОГИН-ФОРМА -->
+  <div class="login-box" id="loginBox">
+    <div class="scp-logo">
+      <div class="scp-symbol"></div>
+      <div class="scp-title"><br><span></span></div>
+    </div>
+    <div class="scp-divider"></div>
+    
+    <!-- Выбор профиля -->
+    <div class="profile-section" id="profileSection">
+      <label for="profileSelect">ВЫБОР ПРОФИЛЯ</label>
+      <select id="profileSelect" class="profile-select">
+        <option value="">-- ВЫБЕРИТЕ ПРОФИЛЬ --</option>
+      </select>
+      <div style="display: flex; gap: 0.5rem; margin-top: 0.3rem; flex-wrap: wrap;">
+        <button class="profile-btn" id="newProfileBtn"> СОЗДАТЬ</button>
+        <button class="profile-btn" id="deleteProfileBtn" style="border-color: #484855; color: #828297;"> УДАЛИТЬ</button>
+        <button class="profile-btn" id="adminLoginBtn" style="border-color: #484855; color: #828297;">  АДМИН</button>
+      </div>
+    </div>
+    
+    <div class="scp-divider"></div>
+    
+    <h2>ВВЕДИТЕ ПАРОЛЬ ДОСТУПА</h2>
+    <div class="input-group">
+      <label for="passwordInput">Код доступа</label>
+      <div class="password-field">
+        <input type="password" id="passwordInput" placeholder="••••" maxlength="10" autocomplete="off" />
+        <button id="enterBtn">ВОЙТИ</button>
+      </div>
+      <div class="error-message" id="errorMsg">
+        <span id="errorText"></span>
+      </div>
+      <div class="attempt-counter" id="attemptCounter"></div>
+    </div>
+    <div class="scp-classification">
+      <span> <span style="color: #ff6b6b;"></span> </span>
+    </div>
+  </div>
+
+  <!-- СЕКРЕТНАЯ ВКЛАДКА -->
+  <div class="secret-tab" id="secretTab">
+    <div class="secret-header">
+      <h3>
+        <span></span> ФАЙЛ ДОКУМЕНТАЦИИ 
+        <i></i>
+      </h3>
+      <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
+        <!-- АВАТАРКА ПРОФИЛЯ -->
+        <div class="profile-avatar-container" id="profileAvatarContainer">
+          <div class="profile-avatar" id="profileAvatar" title="Нажмите для смены фото">
+            <span id="avatarPlaceholder">+</span>
+          </div>
+          <input type="file" id="avatarInput" accept="image/*" style="display: none;" />
+        </div>
+        <button class="logout-btn" id="selfDestructBtn" style="border-color: #47474e; color: #615f5f;"> УНИЧТОЖИТЬ</button>
+        <button class="logout-btn" id="logoutBtn">ВЫХОД</button>
+      </div>
+    </div>
+
+    <!-- Панель администратора (видна только админу) -->
+    <div class="admin-panel" id="adminPanel" style="display: none;">
+      <div class="admin-header">
+        <span>  ПАНЕЛЬ АДМИНИСТРАТОРА</span>
+        <span style="font-size: 0.55rem; color: #43475a;"></span>
+      </div>
+      <div class="scp-divider"></div>
+      <div class="admin-content" id="adminContent">
+        <div id="adminDataDisplay"></div>
+      </div>
+    </div>
+
+    <div class="content-card" id="contentCard">
+      <div class="scp-header-doc">
+        <span></span>
+        <span><span style="color: #4ade80;"></span></span>
+        <span></span>
+      </div>
+      <div class="scp-divider"></div>
+      
+      <div class="editable-area" id="editableArea" contenteditable="false">
+        <p>
+          <span class="highlight">ДОБРО ПОЖАЛОВАТЬ В ЗАЩИЩЁННУЮ ОБЛАСТЬ </span><br /><br />
+          <strong>Данный документ создан для хранения вашей информации</strong><br /><br />
+          Нажмите <strong>«Редактировать»</strong> внизу, чтобы добавить данные в файл.<br />
+          Используйте кнопку <strong>«Добавить фото»</strong> для вставки изображений объекта.<br /><br />
+          <span style="color: #6a7a92; font-size: 0.95rem;">Все данные сохраняются в защищённой базе данных .</span>
+        </p>
+        <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px;" id="imageGallery">
+          <!-- Сюда будут добавляться фото -->
+        </div>
+      </div>
+      
+      <div class="editor-controls">
+        <button class="edit-toggle-btn" id="editToggleBtn"> РЕДАКТИРОВАТЬ</button>
+        <button class="add-image-btn" id="addImageBtn" style="display: none;"> ДОБАВИТЬ ФОТО</button>
+        <button class="save-btn" id="saveBtn" style="display: none;"> СОХРАНИТЬ</button>
+        <button class="cancel-btn" id="cancelBtn" style="display: none;"> ОТМЕНИТЬ</button>
+        <button class="clear-btn" id="clearBtn" style="display: none;"> ОЧИСТИТЬ</button>
+        <span class="edit-status" id="editStatus"></span>
+      </div>
+    </div>
+
+    <!-- БЛОК СОХРАНЁННЫХ ФАЙЛОВ -->
+    <div class="files-section" id="filesSection">
+      <div class="files-header">
+        <span> АРХИВ ЭКСПОРТИРОВАННЫХ ФАЙЛОВ</span>
+        <span class="files-count" id="filesCount">0 файлов</span>
+      </div>
+      <div class="scp-divider"></div>
+      <div class="files-list" id="filesList">
+        <div class="files-empty">Нет сохранённых файлов</div>
+      </div>
+    </div>
+
+    <div class="secret-footer">
+      <span></span>
+    </div>
+  </div>
+</div>
+
+<!-- ОВЕРЛЕЙ БЛОКИРОВКИ -->
+<div class="block-overlay" id="blockOverlay">
+  <div class="block-card">
+    <div class="block-icon"></div>
+    <h2>Ты лох не угадал пароль</h2>
+    <p>Свали от сюда<br />идиот.</p>
+    <p style="color: #5a6a82; font-size: 0.85rem; margin-top: 0.5rem;">ВОССТАНОВЛЕНИЕ ДОСТУПА НЕВОЗМОЖНО.</p>
+    <p style="color: #3a3a4a; font-size: 0.7rem; margin-top: 0.3rem;"></p>
+  </div>
+</div>
+
+<!-- Скрытый input для загрузки файлов -->
+<input type="file" id="imageInput" accept="image/*" multiple style="display: none;" />
+
+<!-- Модальное окно создания профиля -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-card" style="max-width: 500px; max-height: 95vh; overflow-y: auto; padding: 2rem 2rem;">
+    <h2>СОЗДАНИЕ ПРОФИЛЯ</h2>
+    <div class="scp-divider"></div>
+    
+    <div class="modal-input-group">
+      <label for="newProfileName">ЛОГИН (ИМЯ ПРОФИЛЯ) *</label>
+      <input type="text" id="newProfileName" placeholder="Введите логин" maxlength="30" />
+    </div>
+    
+    <div class="modal-input-group">
+      <label for="newProfilePassword">ПАРОЛЬ *</label>
+      <input type="password" id="newProfilePassword" placeholder="Введите пароль (мин. 4 символа)" maxlength="10" />
+    </div>
+    
+    <div class="modal-input-group">
+      <label for="newProfileConfirmPassword">ПОДТВЕРДИТЕ ПАРОЛЬ *</label>
+      <input type="password" id="newProfileConfirmPassword" placeholder="Повторите пароль" maxlength="10" />
+    </div>
+    
+    <div class="scp-divider"></div>
+    
+    <div class="modal-input-group">
+      <label for="newProfileFirstName">ИМЯ</label>
+      <input type="text" id="newProfileFirstName" placeholder="Введите имя" maxlength="30" />
+    </div>
+    
+    <div class="modal-input-group">
+      <label for="newProfileLastName">ФАМИЛИЯ</label>
+      <input type="text" id="newProfileLastName" placeholder="Введите фамилию" maxlength="30" />
+    </div>
+    
+    <div class="modal-input-group">
+      <label for="newProfilePosition">ДОЛЖНОСТЬ</label>
+      <input type="text" id="newProfilePosition" placeholder="Например: Старший научный сотрудник" maxlength="50" />
+    </div>
+    
+    <div class="modal-input-group">
+      <label for="newProfileDepartment">ОТДЕЛ</label>
+      <input type="text" id="newProfileDepartment" placeholder="Например: Отдел исследований" maxlength="40" />
+    </div>
+    
+    <div class="modal-input-group">
+      <label for="newProfileBirthDate">ДАТА РОЖДЕНИЯ</label>
+      <input type="date" id="newProfileBirthDate" />
+    </div>
+    
+    <div class="modal-input-group">
+      <label for="newProfileEmail">EMAIL</label>
+      <input type="email" id="newProfileEmail" placeholder="example@scp.foundation" maxlength="50" />
+    </div>
+    
+    <div class="modal-input-group">
+      <label for="newProfilePhone">ТЕЛЕФОН</label>
+      <input type="text" id="newProfilePhone" placeholder="+7 (999) 123-45-67" maxlength="20" />
+    </div>
+    
+    <div class="modal-actions">
+      <button class="modal-btn modal-cancel" id="modalCancel">ОТМЕНА</button>
+      <button class="modal-btn modal-confirm" id="modalConfirm">СОЗДАТЬ</button>
+    </div>
+    <div class="modal-error" id="modalError"></div>
+  </div>
+</div>
+
+<!-- Модальное окно входа администратора -->
+<div class="modal-overlay" id="adminModalOverlay">
+  <div class="modal-card">
+    <h2> ВХОД АДМИНИСТРАТОРА</h2>
+    <div class="scp-divider"></div>
+    <div class="modal-input-group">
+      <label for="adminPasswordInput">ПАРОЛЬ АДМИНИСТРАТОРА</label>
+      <input type="password" id="adminPasswordInput" placeholder="Введите пароль" maxlength="20" />
+    </div>
+    <div class="modal-actions">
+      <button class="modal-btn modal-cancel" id="adminModalCancel">ОТМЕНА</button>
+      <button class="modal-btn modal-confirm" id="adminModalConfirm">ВОЙТИ</button>
+    </div>
+    <div class="modal-error" id="adminModalError"></div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
